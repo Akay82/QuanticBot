@@ -1,0 +1,30 @@
+@QuanticApi_HostAddress = http://localhost:5069
+@botId = 00000000-0000-0000-0000-000000000000
+
+GET {{QuanticApi_HostAddress}}/health
+
+###
+
+GET {{QuanticApi_HostAddress}}/api/trading-bots
+Accept: application/json
+
+###
+
+POST {{QuanticApi_HostAddress}}/api/trading-bots
+Content-Type: application/json
+
+{
+  "name": "BTC Trend Bot",
+  "symbol": "BTCUSDT",
+  "exchange": "Binance",
+  "strategy": "MovingAverageCrossover",
+  "allocation": 1000
+}
+
+###
+
+POST {{QuanticApi_HostAddress}}/api/trading-bots/{{botId}}/start
+
+###
+
+POST {{QuanticApi_HostAddress}}/api/trading-bots/{{botId}}/stop

@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="QuanticApi/QuanticApi.csproj" />
+  <Project Path="QuanticApi.Business/QuanticApi.Business.csproj" />
+  <Project Path="QuanticApi.Data/QuanticApi.Data.csproj" />
+</Solution>
