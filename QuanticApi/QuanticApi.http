@@ -28,3 +28,17 @@ POST {{QuanticApi_HostAddress}}/api/trading-bots/{{botId}}/start
 ###
 
 POST {{QuanticApi_HostAddress}}/api/trading-bots/{{botId}}/stop
+
+###
+
+GET {{QuanticApi_HostAddress}}/api/market-data/forex/charts?timeframe=1m&candleCount=120
+Accept: application/json
+
+###
+
+GET {{QuanticApi_HostAddress}}/api/market-data/forex/charts?timeframe=15m&candleCount=120
+Accept: application/json
+
+###
+
+POST {{QuanticApi_HostAddress}}/api/market-data/forex/refresh
