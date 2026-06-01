@@ -1,1 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$green-palette,
+      tertiary: mat.$cyan-palette,
+      theme-type: dark,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+* { box-sizing: border-box; }
+html, body { min-height: 100%; margin: 0; }
+body { background: #081715; color: #dcece8; font-family: Inter, Arial, sans-serif; }
+button, input { font: inherit; }
+.positive-text { color: #5fd0a7 !important; }
+.negative-text { color: #ff8994 !important; }
+.page { padding: 24px 25px; }
+.page-header { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 22px; }
+.page-header h1 { margin: 0; color: #edf9f6; font-size: 25px; letter-spacing: -.04em; }
+.page-header p { margin: 6px 0 0; color: #78928e; font-size: 12px; }
+.stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 16px; }
+.content-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(260px, .75fr); gap: 16px; margin-bottom: 16px; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th { color: #65817c; font-size: 10px; letter-spacing: .08em; text-align: left; text-transform: uppercase; }
+td { color: #b5cac5; font-size: 12px; }
+th, td { padding: 13px 16px; border-bottom: 1px solid #18302d; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+@media (max-width: 1050px) { .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .content-grid { grid-template-columns: 1fr; } }
+@media (max-width: 720px) { .page { padding: 18px 14px; } .page-header { align-items: flex-start; flex-direction: column; } }

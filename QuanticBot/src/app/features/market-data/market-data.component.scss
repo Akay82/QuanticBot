@@ -1,0 +1,28 @@
+.market-toolbar { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 16px; padding: 14px 16px; border: 1px solid #1c3734; border-radius: 13px; background: #0e211f; }
+.market-toolbar span { display: block; margin-bottom: 8px; color: #6e8b86; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.button-group { display: flex; gap: 4px; }
+.button-group button { padding: 7px 10px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: #77928e; cursor: pointer; font-size: 11px; font-weight: 750; }
+.button-group button.active { border-color: #276052; background: #173b35; color: #77ddb8; }
+.market-layout { display: grid; grid-template-columns: 225px minmax(0, 1fr); gap: 16px; }
+.pairs { overflow: hidden; align-self: start; border: 1px solid #1c3734; border-radius: 14px; background: #0e211f; }
+.pairs h2 { margin: 0; padding: 16px; border-bottom: 1px solid #1b3532; color: #e0f2ed; font-size: 14px; }
+.pairs button { display: flex; width: 100%; justify-content: space-between; gap: 8px; padding: 14px 13px; border: 0; border-bottom: 1px solid #18302d; background: transparent; color: #bad1cb; cursor: pointer; text-align: left; }
+.pairs button:hover, .pairs button.active { background: #173b35; }
+.pairs strong, .pairs small { display: block; }
+.pairs strong { font-size: 12px; }
+.pairs small { margin-top: 4px; color: #6f8b86; font-size: 9px; }
+.pairs b { color: #62d5aa; font-size: 11px; }
+.pairs p { padding: 14px; color: #78928e; font-size: 12px; }
+.chart-column { min-width: 0; }
+.instrument-heading { display: flex; justify-content: space-between; margin-bottom: 13px; padding: 0 2px; }
+.instrument-heading h2 { margin: 0; color: #edf9f6; font-size: 20px; }
+.instrument-heading p { margin: 4px 0 0; color: #78928e; font-size: 11px; }
+.instrument-heading > strong { font-size: 20px; text-align: right; }
+.instrument-heading small { display: block; margin-top: 5px; font-size: 11px; }
+.ohlc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 14px 0; }
+.ohlc-grid article { padding: 13px; border: 1px solid #1c3734; border-radius: 10px; background: #0e211f; }
+.ohlc-grid span { display: block; margin-bottom: 6px; color: #6e8b86; font-size: 10px; text-transform: uppercase; }
+.ohlc-grid b { color: #cfe4df; font-size: 14px; }
+.error { padding: 10px 12px; border: 1px solid #69343c; border-radius: 8px; background: #3a2227; color: #ff9ca6; font-size: 12px; }
+@media (max-width: 900px) { .market-layout { grid-template-columns: 1fr; } .pairs { display: flex; overflow-x: auto; } .pairs h2 { display: none; } .pairs button { min-width: 150px; } }
+@media (max-width: 620px) { .market-toolbar { flex-direction: column; } .ohlc-grid { grid-template-columns: repeat(2, 1fr); } }

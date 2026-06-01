@@ -1,0 +1,64 @@
+<div class="page">
+  <div class="page-header">
+    <div><h1>Manual paper trading</h1><p>Place, execute, cancel, and close simulated forex orders.</p></div>
+    <app-ui-button variant="secondary" icon="R" [disabled]="loading()" (pressed)="changeAccount()">Reload account</app-ui-button>
+  </div>
+
+  @if (message()) { <p class="notice success">{{ message() }}</p> }
+  @if (error()) { <p class="notice error">{{ error() }}</p> }
+
+  <div class="account-bar">
+    <label><span>Paper account</span><select [(ngModel)]="accountId" (change)="changeAccount()">@for (account of accounts(); track account.id) { <option [ngValue]="account.id">{{ account.accountName }}</option> }</select></label>
+    @if (selectedAccount(); as account) { <div><span>Available balance</span><b>{{ account.currentBalance | currency:account.currency:'symbol':'1.2-2' }}</b></div> }
+  </div>
+
+  <div class="stats-grid">
+    <app-stat-card label="Realized P&L" [value]="realizedPnl() | currency:'USD':'symbol':'1.2-2'" caption="Completed trade history" icon="$" [positive]="realizedPnl() >= 0" />
+    <app-stat-card label="Unrealized P&L" [value]="unrealizedPnl() | currency:'USD':'symbol':'1.2-6'" caption="Live quote valuation" icon="~" [positive]="unrealizedPnl() >= 0" />
+    <app-stat-card label="Open positions" [value]="openPositions().length.toString()" caption="Active market exposure" icon="P" />
+    <app-stat-card label="Pending orders" [value]="pendingOrders().length.toString()" caption="Waiting for execution" icon="O" />
+  </div>
+
+  <div class="desk-grid">
+    <app-ui-panel title="Create manual order" subtitle="Creates a pending market order. Execute it when your selected price is ready.">
+      <form class="order-form" (ngSubmit)="placeOrder()">
+        <label><span>Forex instrument</span><select [(ngModel)]="instrumentId" name="instrument">@for (instrument of instruments(); track instrument.id) { <option [ngValue]="instrument.id">{{ instrument.symbol }} · {{ instrument.exchange }}</option> }</select></label>
+        <label><span>Side</span><select [(ngModel)]="side" name="side"><option value="BUY">BUY</option><option value="SELL">SELL</option></select></label>
+        <label><span>Quantity</span><input type="number" min="0.000001" step="any" [(ngModel)]="quantity" name="quantity" /></label>
+        <label><span>Requested price <small>optional</small></span><input type="number" min="0" step="any" [(ngModel)]="requestedPrice" name="requestedPrice" placeholder="Enter market price" /></label>
+        <app-ui-button type="submit" [disabled]="actionLoading()">{{ actionLoading() ? 'Working...' : 'Create pending order' }}</app-ui-button>
+      </form>
+    </app-ui-panel>
+
+    <app-ui-panel title="Open positions" subtitle="Use Close position to sell the complete held quantity at its current price.">
+      <div class="position-list">
+        @for (position of openPositions(); track position.id) {
+          <article>
+            <div><strong>{{ instrumentName(position.instrumentId) }}</strong><span>{{ position.quantity | number:'1.0-6' }} units</span></div>
+            <div><span>Average</span><b>{{ position.averagePrice | number:'1.4-6' }}</b></div>
+            <div><span>Current</span><b>{{ positionCurrentPrice(position) | number:'1.4-6' }}</b></div>
+            <div><span>Unrealized P&L</span><b [class.positive-text]="positionPnl(position) >= 0" [class.negative-text]="positionPnl(position) < 0">{{ positionPnl(position) | currency:'USD':'symbol':'1.2-6' }}</b></div>
+            <app-ui-button variant="secondary" [disabled]="actionLoading()" (pressed)="closePosition(position)">Close position</app-ui-button>
+          </article>
+        } @empty { <p class="empty">No open positions for this account.</p> }
+      </div>
+    </app-ui-panel>
+  </div>
+
+  <app-ui-panel title="Pending orders" subtitle="Enter the final execution price or cancel the order.">
+    <div class="table-wrap"><table><thead><tr><th>Order</th><th>Instrument</th><th>Side</th><th>Quantity</th><th>Requested</th><th>Execution price</th><th>Actions</th></tr></thead><tbody>
+      @for (order of pendingOrders(); track order.id) {
+        <tr><td>#{{ order.id }}</td><td>{{ instrumentName(order.instrumentId) }}</td><td><app-status-badge [label]="order.side" [tone]="order.side === 'BUY' ? 'buy' : 'sell'" /></td><td>{{ order.quantity | number:'1.0-6' }}</td><td>{{ order.requestedPrice | number:'1.4-6' }}</td><td><input class="price-input" type="number" min="0" step="any" [(ngModel)]="executionPrices[order.id]" /></td><td><div class="row-actions"><button class="execute" [disabled]="actionLoading()" (click)="execute(order)">Execute</button><button class="cancel" [disabled]="actionLoading()" (click)="cancel(order)">Cancel</button></div></td></tr>
+      } @empty { <tr><td colspan="7">No pending orders.</td></tr> }
+    </tbody></table></div>
+  </app-ui-panel>
+
+  <div class="section-gap"></div>
+  <app-ui-panel title="Executed trades and P&L" subtitle="Trade ledger for the selected paper account.">
+    <div class="table-wrap"><table><thead><tr><th>Trade</th><th>Instrument</th><th>Side</th><th>Quantity</th><th>Price</th><th>Total value</th><th>Profit / loss</th><th>Time</th></tr></thead><tbody>
+      @for (trade of trades(); track trade.id) {
+        <tr><td>#{{ trade.id }}</td><td>{{ instrumentName(trade.instrumentId) }}</td><td><app-status-badge [label]="trade.side" [tone]="trade.side === 'BUY' ? 'buy' : 'sell'" /></td><td>{{ trade.quantity | number:'1.0-6' }}</td><td>{{ trade.price | number:'1.4-6' }}</td><td>{{ trade.totalValue | currency:'USD':'symbol':'1.2-2' }}</td><td [class.positive-text]="(trade.profitLoss ?? 0) >= 0" [class.negative-text]="(trade.profitLoss ?? 0) < 0">{{ trade.profitLoss | currency:'USD':'symbol':'1.2-2' }}</td><td>{{ trade.tradeTime | date:'dd MMM, HH:mm' }}</td></tr>
+      } @empty { <tr><td colspan="8">No executed trades.</td></tr> }
+    </tbody></table></div>
+  </app-ui-panel>
+</div>

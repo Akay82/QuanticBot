@@ -1,0 +1,5 @@
+<div class="page">
+  <div class="page-header"><div><h1>Trade history</h1><p>Inspect every order placed by the bot.</p></div><app-ui-button icon="↓">Export trades</app-ui-button></div>
+  <div class="trade-filters"><app-ui-input label="Search trade or instrument" placeholder="Search trades..." type="search" /><app-ui-select [value]="range()" (valueChange)="updateRange($event)" /></div>
+  <app-ui-panel title="All trades" [subtitle]="trades().length + ' orders found'"><app-trade-table [trades]="trades()" /></app-ui-panel>
+</div>

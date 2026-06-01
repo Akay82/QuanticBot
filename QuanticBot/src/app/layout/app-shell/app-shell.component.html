@@ -1,0 +1,18 @@
+<div class="shell">
+  <aside>
+    <div class="brand"><span class="brand-mark">Q</span><div><strong>QUANTIK</strong><small>TRADER</small></div></div>
+    <nav>
+      @for (link of links; track link.path) {
+        <a [routerLink]="link.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: link.exact }"><span>{{ link.icon }}</span>{{ link.label }}</a>
+      }
+    </nav>
+    <div class="system">
+      <span class="pulse"></span><div><strong>Bot is running</strong><small>Last sync: just now</small></div>
+    </div>
+    <div class="profile"><span class="avatar">AS</span><div><strong>Arjun Sharma</strong><small>Administrator</small></div><b>⋮</b></div>
+  </aside>
+  <main>
+    <header class="topbar"><div class="market"><span class="pulse"></span><b>Market is open</b><small>NSE closes in 04:18:22</small></div><div class="top-actions"><span>?</span><span>♧</span><b class="avatar">AS</b></div></header>
+    <router-outlet />
+  </main>
+</div>

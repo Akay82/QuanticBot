@@ -1,0 +1,3 @@
+.report-filters { display: grid; grid-template-columns: auto minmax(145px, 1fr) minmax(145px, 1fr) auto; align-items: start; gap: 10px; margin-bottom: 18px; padding: 13px; border: 1px solid #1c3734; border-radius: 13px; background: #0e211f; }
+@media (max-width: 920px) { .report-filters { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .report-filters { grid-template-columns: 1fr; } }

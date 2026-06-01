@@ -1,0 +1,11 @@
+<div class="page">
+  <div class="page-header"><div><h1>Reports &amp; analytics</h1><p>Review trading performance across custom periods.</p></div><app-ui-button icon="↓">Download CSV</app-ui-button></div>
+  <div class="report-filters"><app-ui-select [value]="range()" (valueChange)="updateRange($event)" /><app-ui-input label="From date" type="date" /><app-ui-input label="To date" type="date" /><app-ui-button variant="secondary">Apply filters</app-ui-button></div>
+  <div class="stats-grid">
+    <app-stat-card label="Net P&L" [value]="summary().totalPnl | currency:'USD':'symbol':'1.2-2'" caption="Selected period" icon="$" [positive]="true" />
+    <app-stat-card label="Win rate" [value]="(summary().winRate | number:'1.0-1') + '%'" caption="Closed trades only" icon="◎" [positive]="true" />
+    <app-stat-card label="Trades executed" [value]="summary().totalTrades.toString()" caption="Including open trades" icon="⇄" />
+    <app-stat-card label="Profit factor" [value]="summary().profitFactor | number:'1.2-2'" caption="Gross profit / gross loss" icon="↗" [positive]="true" />
+  </div>
+  <app-ui-panel title="Performance report" subtitle="Cumulative P&L for your selected period"><app-performance-chart [points]="summary().performance" /></app-ui-panel>
+</div>

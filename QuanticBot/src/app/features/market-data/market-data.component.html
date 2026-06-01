@@ -1,0 +1,42 @@
+<div class="page">
+  <div class="page-header">
+    <div><h1>Forex market charts</h1><p>Live OHLC market data with multiple chart views.</p></div>
+    <app-ui-button icon="↻" [disabled]="loading()" (pressed)="refresh()">{{ loading() ? 'Refreshing...' : 'Refresh data' }}</app-ui-button>
+  </div>
+
+  <div class="market-toolbar">
+    <div><span>Timeframe</span><div class="button-group">@for (item of timeframes; track item) { <button [class.active]="timeframe() === item" (click)="selectTimeframe(item)">{{ item }}</button> }</div></div>
+    <div><span>Chart type</span><div class="button-group">@for (mode of modes; track mode.value) { <button [class.active]="chartMode() === mode.value" (click)="selectMode(mode.value)">{{ mode.label }}</button> }</div></div>
+  </div>
+
+  @if (error()) { <p class="error">{{ error() }}</p> }
+  <div class="market-layout">
+    <aside class="pairs">
+      <h2>Currency pairs</h2>
+      @for (chart of charts(); track chart.instrumentId) {
+        <button [class.active]="selectedInstrumentId() === chart.instrumentId" (click)="selectInstrument(chart.instrumentId)">
+          <span><strong>{{ chart.symbol }}</strong><small>{{ chart.name }}</small></span>
+          <b>{{ chart.candles.at(-1)?.close | number:'1.4-6' }}</b>
+        </button>
+      } @empty { <p>No forex pairs available.</p> }
+    </aside>
+
+    <section class="chart-column">
+      @if (selectedChart(); as chart) {
+        <div class="instrument-heading"><div><h2>{{ chart.symbol }}</h2><p>{{ chart.name }} · {{ chart.timeframe }}</p></div><strong [class.negative-text]="priceChange() < 0" [class.positive-text]="priceChange() >= 0">{{ latestCandle()?.close | number:'1.4-6' }} <small>{{ priceChange() >= 0 ? '+' : '' }}{{ priceChange() | number:'1.4-6' }}</small></strong></div>
+        <app-ui-panel title="Price chart" [subtitle]="chart.candles.length + ' candles · ' + chartMode() + ' view'"><app-forex-chart [data]="chart" [mode]="chartMode()" /></app-ui-panel>
+        <div class="ohlc-grid">
+          <article><span>Open</span><b>{{ latestCandle()?.open | number:'1.4-6' }}</b></article>
+          <article><span>High</span><b>{{ latestCandle()?.high | number:'1.4-6' }}</b></article>
+          <article><span>Low</span><b>{{ latestCandle()?.low | number:'1.4-6' }}</b></article>
+          <article><span>Close</span><b>{{ latestCandle()?.close | number:'1.4-6' }}</b></article>
+        </div>
+        <app-ui-panel title="Recent candles" subtitle="Latest OHLC observations">
+          <div class="table-wrap"><table><thead><tr><th>Time</th><th>Open</th><th>High</th><th>Low</th><th>Close</th></tr></thead><tbody>
+            @for (candle of chart.candles.slice(-6).reverse(); track candle.candleTime) { <tr><td>{{ candle.candleTime | date:'dd MMM, HH:mm' }}</td><td>{{ candle.open | number:'1.4-6' }}</td><td>{{ candle.high | number:'1.4-6' }}</td><td>{{ candle.low | number:'1.4-6' }}</td><td>{{ candle.close | number:'1.4-6' }}</td></tr> }
+          </tbody></table></div>
+        </app-ui-panel>
+      }
+    </section>
+  </div>
+</div>

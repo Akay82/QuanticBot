@@ -1,0 +1,16 @@
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Trade ID</th><th>Instrument</th><th>Side</th><th>Strategy</th><th>Executed</th><th>P&amp;L</th><th>Status</th></tr></thead>
+    <tbody>
+      @for (trade of trades; track trade.id) {
+        <tr>
+          <td>{{ trade.id }}</td><td><strong>{{ trade.symbol }}</strong></td>
+          <td><app-status-badge [label]="trade.side" [tone]="trade.side === 'BUY' ? 'buy' : 'sell'" /></td>
+          <td>{{ trade.strategy }}</td><td>{{ trade.executedAt | date:'dd MMM, HH:mm' }}</td>
+          <td [class.positive-text]="trade.pnl >= 0" [class.negative-text]="trade.pnl < 0">{{ trade.pnl | currency:'USD':'symbol':'1.2-2' }}</td>
+          <td><app-status-badge [label]="trade.status" [tone]="trade.status === 'PROFIT' ? 'positive' : trade.status === 'LOSS' ? 'negative' : 'neutral'" /></td>
+        </tr>
+      } @empty { <tr><td colspan="7">No trades available for this period.</td></tr> }
+    </tbody>
+  </table>
+</div>

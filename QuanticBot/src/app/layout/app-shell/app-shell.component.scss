@@ -1,0 +1,24 @@
+.shell { display: grid; min-height: 100vh; grid-template-columns: 220px 1fr; background: #081715; }
+aside { display: flex; position: sticky; top: 0; height: 100vh; flex-direction: column; border-right: 1px solid #1a3431; background: #0b1c1b; }
+.brand { display: flex; height: 64px; align-items: center; gap: 10px; padding: 0 18px; border-bottom: 1px solid #1a3431; }
+.brand-mark { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 9px; background: #24c889; color: #082018; font-weight: 900; }
+.brand strong { display: block; color: #e6f6f1; font-size: 13px; letter-spacing: .08em; }
+small { display: block; color: #63817c; font-size: 10px; }
+nav { flex: 1; padding: 18px 10px; }
+nav a { display: flex; align-items: center; gap: 12px; margin-bottom: 5px; padding: 11px 12px; border-radius: 8px; color: #75918c; font-size: 13px; font-weight: 700; text-decoration: none; }
+nav a span { width: 17px; color: #638b84; font-size: 18px; text-align: center; }
+nav a:hover, nav a.active { background: #173b35; color: #80deb9; }
+.system, .profile, .market, .top-actions { display: flex; align-items: center; }
+.system { gap: 9px; margin: 10px; padding: 12px 10px; border: 1px solid #1b3b36; border-radius: 10px; background: #102824; }
+.system strong, .profile strong { display: block; color: #a8c4bf; font-size: 11px; }
+.pulse { width: 8px; height: 8px; border-radius: 50%; background: #24c889; box-shadow: 0 0 0 4px rgba(36,200,137,.12); }
+.profile { gap: 9px; padding: 12px; border-top: 1px solid #1a3431; }
+.profile div { flex: 1; }
+.avatar { display: grid; width: 31px; height: 31px; place-items: center; border-radius: 50%; background: #24473f; color: #88dabb; font-size: 10px; }
+main { min-width: 0; }
+.topbar { display: flex; height: 64px; align-items: center; justify-content: space-between; padding: 0 25px; border-bottom: 1px solid #1a3431; background: #0b1c1b; }
+.market { gap: 9px; }
+.market b { color: #7dd7b4; font-size: 12px; }
+.market small { padding-left: 5px; border-left: 1px solid #29423f; }
+.top-actions { gap: 18px; color: #6b8a85; }
+@media (max-width: 720px) { .shell { grid-template-columns: 1fr; } aside { display: none; } .topbar { padding: 0 15px; } }

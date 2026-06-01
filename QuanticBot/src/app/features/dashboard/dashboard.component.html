@@ -1,0 +1,26 @@
+<div class="page">
+  <div class="page-header">
+    <div><h1>Trading overview</h1><p>Monitor your algorithmic trading performance in real time.</p></div>
+    <div class="header-actions"><app-ui-select [value]="range()" (valueChange)="updateRange($event)" /><app-ui-button icon="↓">Export report</app-ui-button></div>
+  </div>
+  <div class="stats-grid">
+    <app-stat-card label="Total P&L" [value]="summary().totalPnl | currency:'USD':'symbol':'1.2-2'" [caption]="'↑ ' + summary().pnlChange + '% vs last period'" icon="$" [positive]="true" />
+    <app-stat-card label="Win rate" [value]="(summary().winRate | number:'1.0-1') + '%'" caption="↑ 4.2% vs last period" icon="◎" [positive]="true" />
+    <app-stat-card label="Total trades" [value]="summary().totalTrades.toString()" caption="Across selected period" icon="⇄" />
+    <app-stat-card label="Profit factor" [value]="summary().profitFactor | number:'1.2-2'" caption="Healthy performance ratio" icon="↗" [positive]="true" />
+  </div>
+  <div class="content-grid">
+    <app-ui-panel title="P&L performance" subtitle="Cumulative profit and loss over the selected period"><app-performance-chart [points]="summary().performance" /></app-ui-panel>
+    <app-ui-panel title="Strategy performance" subtitle="Profitability by active strategy">
+      <div class="strategies">
+        @for (strategy of summary().strategies; track strategy.name) {
+          <div class="strategy"><div><strong>{{ strategy.name }}</strong><span>{{ strategy.trades }} trades</span></div><b>{{ strategy.profit | currency:'USD':'symbol':'1.2-2' }}</b><i><em [style.width.%]="strategy.success"></em></i></div>
+        }
+      </div>
+    </app-ui-panel>
+  </div>
+  <app-ui-panel title="Recent trades" subtitle="Latest orders placed by your trading bot">
+    <app-ui-button panel-action variant="ghost">View all trades →</app-ui-button>
+    <app-trade-table [trades]="summary().trades.slice(0, 5)" />
+  </app-ui-panel>
+</div>

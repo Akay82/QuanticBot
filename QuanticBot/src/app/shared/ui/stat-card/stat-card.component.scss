@@ -1,0 +1,7 @@
+article { min-height: 126px; padding: 17px; border: 1px solid #1c3734; border-radius: 14px; background: linear-gradient(145deg, #102523, #0c1e1d); }
+.top { display: flex; justify-content: space-between; align-items: center; }
+.label { color: #87a39e; font-size: 12px; }
+.icon { display: grid; width: 27px; height: 27px; place-items: center; border-radius: 8px; background: #183532; color: #6ed6b0; font-size: 14px; }
+strong { display: block; margin: 16px 0 6px; color: #eaf9f4; font-size: 23px; letter-spacing: -.04em; }
+.caption { color: #78928e; font-size: 11px; }
+.caption.positive { color: #60cda6; }
