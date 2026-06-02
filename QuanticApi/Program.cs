@@ -30,7 +30,9 @@ builder.Services.AddHttpClient<TwelveDataForexClient>(client =>
     client.Timeout = TimeSpan.FromSeconds(30);
 });
 builder.Services.AddScoped<IMarketDataService, MarketDataService>();
+builder.Services.AddScoped<ISwingBotService, SwingBotService>();
 builder.Services.AddHostedService<ForexMarketDataWorker>();
+builder.Services.AddHostedService<SwingBotWorker>();
 
 var app = builder.Build();
 

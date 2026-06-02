@@ -10,5 +10,6 @@ public sealed record TradingBotResponse(
     string Strategy,
     decimal Allocation,
     TradingBotStatus Status,
+    DateTime? LastEvaluatedCandleUtc,
     DateTimeOffset CreatedAtUtc,
     DateTimeOffset UpdatedAtUtc);

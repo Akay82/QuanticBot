@@ -9,6 +9,7 @@ public sealed class TradingBot
     public string Strategy { get; set; } = string.Empty;
     public decimal Allocation { get; set; }
     public TradingBotStatus Status { get; set; } = TradingBotStatus.Stopped;
+    public DateTime? LastEvaluatedCandleUtc { get; set; }
     public DateTimeOffset CreatedAtUtc { get; set; }
     public DateTimeOffset UpdatedAtUtc { get; set; }
 }

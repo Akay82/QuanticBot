@@ -31,6 +31,35 @@ POST {{QuanticApi_HostAddress}}/api/trading-bots/{{botId}}/stop
 
 ###
 
+PUT {{QuanticApi_HostAddress}}/api/trading-bots/{{botId}}/settings
+Content-Type: application/json
+
+{
+  "accountId": 1,
+  "instrumentId": 1,
+  "timeframe": "4h",
+  "fastEmaPeriod": 50,
+  "slowEmaPeriod": 200,
+  "rsiPeriod": 14,
+  "atrPeriod": 14,
+  "rsiEntryMin": 40,
+  "rsiEntryMax": 55,
+  "rsiExit": 70,
+  "atrStopMultiplier": 1.5,
+  "atrTakeProfitMultiplier": 3,
+  "riskPercent": 1
+}
+
+###
+
+GET {{QuanticApi_HostAddress}}/api/trading-bots/{{botId}}/dashboard
+
+###
+
+POST {{QuanticApi_HostAddress}}/api/trading-bots/{{botId}}/evaluate
+
+###
+
 GET {{QuanticApi_HostAddress}}/api/market-data/forex/charts?timeframe=1m&candleCount=120
 Accept: application/json
 

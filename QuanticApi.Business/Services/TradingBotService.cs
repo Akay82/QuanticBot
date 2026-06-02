@@ -135,6 +135,7 @@ public sealed class TradingBotService(ITradingBotRepository repository) : ITradi
             bot.Strategy,
             bot.Allocation,
             bot.Status,
+            bot.LastEvaluatedCandleUtc,
             bot.CreatedAtUtc,
             bot.UpdatedAtUtc);
 }

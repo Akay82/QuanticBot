@@ -17,6 +17,9 @@ public sealed class TradingDbContext(DbContextOptions<TradingDbContext> options)
     public DbSet<Signal> Signals => Set<Signal>();
     public DbSet<Trade> Trades => Set<Trade>();
     public DbSet<Watchlist> Watchlists => Set<Watchlist>();
+    public DbSet<BotStrategySettings> BotStrategySettings => Set<BotStrategySettings>();
+    public DbSet<BotPosition> BotPositions => Set<BotPosition>();
+    public DbSet<BotLog> BotLogs => Set<BotLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
