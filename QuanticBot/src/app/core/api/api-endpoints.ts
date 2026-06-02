@@ -27,7 +27,13 @@ export const API_ENDPOINTS = {
   tradingBots: {
     list: `${API_BASE_URL}/trading-bots`,
     details: (id: string) => `${API_BASE_URL}/trading-bots/${id}`,
+    settings: (id: string) => `${API_BASE_URL}/trading-bots/${id}/settings`,
+    dashboard: (id: string) => `${API_BASE_URL}/trading-bots/${id}/dashboard`,
+    logs: (id: string) => `${API_BASE_URL}/trading-bots/${id}/logs`,
+    logsStream: (id: string) => `${API_BASE_URL}/trading-bots/${id}/logs/stream`,
+    evaluate: (id: string) => `${API_BASE_URL}/trading-bots/${id}/evaluate`,
     start: (id: string) => `${API_BASE_URL}/trading-bots/${id}/start`,
+    pause: (id: string) => `${API_BASE_URL}/trading-bots/${id}/pause`,
     stop: (id: string) => `${API_BASE_URL}/trading-bots/${id}/stop`
   }
 } as const;

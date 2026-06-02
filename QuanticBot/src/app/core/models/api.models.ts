@@ -150,6 +150,69 @@ export interface TradingBot {
   strategy: string;
   allocation: number;
   status: TradingBotStatus;
+  lastEvaluatedCandleUtc?: string | null;
   createdAtUtc: string;
   updatedAtUtc: string;
+}
+
+export interface CreateTradingBotRequest {
+  name: string;
+  symbol: string;
+  exchange: string;
+  strategy: string;
+  allocation: number;
+}
+
+export interface SwingBotSettingsRequest {
+  accountId: number;
+  instrumentId: number;
+  timeframe: string;
+  fastEmaPeriod: number;
+  slowEmaPeriod: number;
+  rsiPeriod: number;
+  atrPeriod: number;
+  rsiEntryMin: number;
+  rsiEntryMax: number;
+  rsiExit: number;
+  atrStopMultiplier: number;
+  atrTakeProfitMultiplier: number;
+  riskPercent: number;
+}
+
+export interface SwingBotSettings extends SwingBotSettingsRequest {
+  botId: string;
+  isEnabled: boolean;
+  updatedAtUtc: string;
+}
+
+export interface BotPosition {
+  positionId: number;
+  entryPrice: number;
+  quantity: number;
+  stopLoss: number;
+  takeProfit: number;
+  openedAtUtc: string;
+  updatedAtUtc: string;
+}
+
+export interface BotLog {
+  id: number;
+  level: string;
+  eventType: string;
+  message: string;
+  details?: string | null;
+  createdAtUtc: string;
+}
+
+export interface SwingBotDashboard {
+  bot: TradingBot;
+  settings?: SwingBotSettings | null;
+  position?: BotPosition | null;
+  recentLogs: BotLog[];
+}
+
+export interface BotEvaluationResponse {
+  botId: string;
+  outcome: string;
+  message: string;
 }

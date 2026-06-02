@@ -1,0 +1,71 @@
+<div class="page">
+  <div class="page-header"><div><h1>Trading bot operations</h1><p>Create, configure, monitor, and control your EMA RSI swing bots.</p></div><app-ui-button variant="secondary" icon="R" [disabled]="loading()" (pressed)="loadInitialData()">Reload bots</app-ui-button></div>
+  @if (message()) { <p class="notice success">{{ message() }}</p> }
+  @if (error()) { <p class="notice error">{{ error() }}</p> }
+
+  <div class="bot-layout">
+    <aside class="bot-sidebar">
+      <app-ui-panel title="Trading bots" subtitle="Select a bot to manage">
+        <div class="bot-list">
+          @for (bot of bots(); track bot.id) {
+            <button [class.active]="selectedBotId() === bot.id" (click)="selectBot(bot.id)"><div><strong>{{ bot.name }}</strong><span>{{ bot.symbol }} · {{ bot.strategy }}</span></div><app-status-badge [label]="botStatus(bot)" [tone]="botTone(bot)" /></button>
+          } @empty { <p class="empty">No bots yet. Create your first EMA RSI swing bot below.</p> }
+        </div>
+      </app-ui-panel>
+      <app-ui-panel title="Create swing bot" subtitle="Creates a stopped bot ready for configuration">
+        <form class="compact-form" (ngSubmit)="createBot()">
+          <label><span>Name</span><input [(ngModel)]="botName" name="botName" /></label>
+          <label><span>Symbol</span><select [(ngModel)]="botSymbol" name="botSymbol">@for (instrument of instruments(); track instrument.id) { <option [value]="instrument.symbol">{{ instrument.symbol }}</option> }</select></label>
+          <label><span>Allocation</span><input type="number" min="1" step="any" [(ngModel)]="botAllocation" name="allocation" /></label>
+          <app-ui-button type="submit" [disabled]="actionLoading()">Create bot</app-ui-button>
+        </form>
+      </app-ui-panel>
+    </aside>
+
+    <section class="bot-content">
+      @if (selectedBot(); as bot) {
+        <div class="bot-heading"><div><h2>{{ bot.name }}</h2><p>{{ bot.symbol }} · {{ bot.exchange }} · Strategy: <b>{{ bot.strategy }}</b></p></div><div class="actions"><app-ui-button [disabled]="actionLoading()" (pressed)="startBot()">Start</app-ui-button><app-ui-button variant="secondary" [disabled]="actionLoading()" (pressed)="pauseBot()">Pause</app-ui-button><app-ui-button variant="ghost" [disabled]="actionLoading()" (pressed)="stopBot()">Stop</app-ui-button><app-ui-button variant="secondary" [disabled]="actionLoading()" (pressed)="evaluateBot()">Evaluate now</app-ui-button></div></div>
+        <div class="stats-grid">
+          <app-stat-card label="Bot status" [value]="botStatus(bot)" caption="Worker lifecycle state" icon="B" [positive]="bot.status === 1" />
+          <app-stat-card label="Allocation" [value]="bot.allocation | currency:'USD':'symbol':'1.2-2'" caption="Maximum strategy allocation" icon="$" />
+          <app-stat-card label="Strategy" [value]="bot.strategy" caption="Active algorithm" icon="S" />
+          <app-stat-card label="Last evaluated" [value]="bot.lastEvaluatedCandleUtc ? (bot.lastEvaluatedCandleUtc | date:'dd MMM, HH:mm') : 'Not yet'" caption="Completed strategy candle" icon="T" />
+          <app-stat-card label="Open strategy P&L" [value]="openPnl() | currency:'USD':'symbol':'1.2-6'" caption="Live managed-position valuation" icon="P" [positive]="openPnl() >= 0" />
+        </div>
+
+        <div class="dashboard-grid">
+          <app-ui-panel title="EMA RSI swing settings" subtitle="Entry, exit, ATR risk, and account configuration">
+            <form class="settings-form" (ngSubmit)="saveSettings()">
+              <label><span>Paper account</span><select [(ngModel)]="settings.accountId" name="accountId">@for (account of accounts(); track account.id) { <option [ngValue]="account.id">{{ account.accountName }}</option> }</select></label>
+              <label><span>Instrument</span><select [(ngModel)]="settings.instrumentId" name="instrumentId">@for (instrument of instruments(); track instrument.id) { <option [ngValue]="instrument.id">{{ instrument.symbol }}</option> }</select></label>
+              <label><span>Timeframe</span><select [(ngModel)]="settings.timeframe" name="timeframe"><option>1m</option><option>5m</option><option>15m</option><option>30m</option><option>1h</option><option>4h</option><option>1d</option></select></label>
+              <label><span>Risk %</span><input type="number" min=".01" max="100" step=".01" [(ngModel)]="settings.riskPercent" name="risk" /></label>
+              <label><span>Fast EMA</span><input type="number" min="1" [(ngModel)]="settings.fastEmaPeriod" name="fastEma" /></label>
+              <label><span>Slow EMA</span><input type="number" min="2" [(ngModel)]="settings.slowEmaPeriod" name="slowEma" /></label>
+              <label><span>RSI period</span><input type="number" min="1" [(ngModel)]="settings.rsiPeriod" name="rsiPeriod" /></label>
+              <label><span>ATR period</span><input type="number" min="1" [(ngModel)]="settings.atrPeriod" name="atrPeriod" /></label>
+              <label><span>RSI entry min</span><input type="number" min="0" max="100" [(ngModel)]="settings.rsiEntryMin" name="rsiMin" /></label>
+              <label><span>RSI entry max</span><input type="number" min="0" max="100" [(ngModel)]="settings.rsiEntryMax" name="rsiMax" /></label>
+              <label><span>RSI exit</span><input type="number" min="0" max="100" [(ngModel)]="settings.rsiExit" name="rsiExit" /></label>
+              <label><span>ATR stop x</span><input type="number" min=".01" step=".1" [(ngModel)]="settings.atrStopMultiplier" name="atrStop" /></label>
+              <label><span>ATR take profit x</span><input type="number" min=".01" step=".1" [(ngModel)]="settings.atrTakeProfitMultiplier" name="atrTake" /></label>
+              <div class="form-action"><app-ui-button type="submit" [disabled]="actionLoading()">Save settings</app-ui-button></div>
+            </form>
+          </app-ui-panel>
+
+          <app-ui-panel title="Managed position" subtitle="ATR stop-loss and take-profit tracking">
+            @if (activePosition(); as position) {
+              <div class="position-card"><div><span>Instrument</span><b>{{ dashboard()?.settings ? instrumentName(dashboard()!.settings!.instrumentId) : bot.symbol }}</b></div><div><span>Entry</span><b>{{ position.entryPrice | number:'1.4-6' }}</b></div><div><span>Current quote</span><b>{{ currentQuote() | number:'1.4-6' }}</b></div><div><span>Open P&L</span><b [class.positive-text]="openPnl() >= 0" [class.negative-text]="openPnl() < 0">{{ openPnl() | currency:'USD':'symbol':'1.2-6' }}</b></div><div><span>Quantity</span><b>{{ position.quantity | number:'1.0-6' }} units</b></div><div><span>Stop loss</span><b class="negative-text">{{ position.stopLoss | number:'1.4-6' }}</b></div><div><span>Take profit</span><b class="positive-text">{{ position.takeProfit | number:'1.4-6' }}</b></div><div><span>Opened</span><b>{{ position.openedAtUtc | date:'dd MMM, HH:mm' }}</b></div></div>
+            } @else { <p class="empty">The bot has no managed open position.</p> }
+          </app-ui-panel>
+        </div>
+
+        <app-ui-panel title="Live bot logs" subtitle="Server-Sent Events stream with dashboard polling fallback">
+          <div class="log-list">@for (log of logs(); track log.id) { <article><span class="log-level" [class.warn]="log.level !== 'INFO'">{{ log.level }}</span><div><strong>{{ log.eventType }}</strong><p>{{ log.message }}</p>@if (log.details) { <small>{{ log.details }}</small> }</div><time>{{ log.createdAtUtc | date:'dd MMM, HH:mm:ss' }}</time></article> } @empty { <p class="empty">No bot logs yet.</p> }</div>
+        </app-ui-panel>
+      } @else {
+        <app-ui-panel title="No bot selected" subtitle="Create an EMA RSI swing bot to begin monitoring"><p class="empty">Your bot dashboard will appear here after the first bot is created.</p></app-ui-panel>
+      }
+    </section>
+  </div>
+</div>

@@ -12,6 +12,11 @@ export const routes: Routes = [
           import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent)
       },
       {
+        path: 'bots',
+        loadComponent: () =>
+          import('./features/bots/bots.component').then((m) => m.BotsComponent)
+      },
+      {
         path: 'paper-trading',
         loadComponent: () =>
           import('./features/paper-trading/paper-trading.component').then((m) => m.PaperTradingComponent)

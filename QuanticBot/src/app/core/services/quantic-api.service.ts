@@ -3,8 +3,9 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_ENDPOINTS } from '../api/api-endpoints';
 import {
-  ApiTrade, CreateOrderRequest, ForexChart, Instrument, MarketDataRefreshResponse, Order, PagedResponse,
-  PaperAccount, Position, PriceHistory, QueryParams, Signal, Strategy, TradingBot, Watchlist
+  ApiTrade, BotEvaluationResponse, BotLog, CreateOrderRequest, CreateTradingBotRequest, ForexChart,
+  Instrument, MarketDataRefreshResponse, Order, PagedResponse, PaperAccount, Position, PriceHistory,
+  QueryParams, Signal, Strategy, SwingBotDashboard, SwingBotSettings, SwingBotSettingsRequest, TradingBot, Watchlist
 } from '../models/api.models';
 import { CrudApiService } from './crud-api.service';
 
@@ -31,6 +32,13 @@ export class QuanticApiService {
   executeOrder(id: number, executedPrice: number): Observable<void> { return this.http.post<void>(API_ENDPOINTS.orders.execute(id), { executedPrice }); }
 
   getTradingBots(): Observable<TradingBot[]> { return this.http.get<TradingBot[]>(API_ENDPOINTS.tradingBots.list); }
+  createTradingBot(request: CreateTradingBotRequest): Observable<TradingBot> { return this.http.post<TradingBot>(API_ENDPOINTS.tradingBots.list, request); }
+  updateSwingBotSettings(id: string, request: SwingBotSettingsRequest): Observable<SwingBotSettings> { return this.http.put<SwingBotSettings>(API_ENDPOINTS.tradingBots.settings(id), request); }
+  getSwingBotDashboard(id: string): Observable<SwingBotDashboard> { return this.http.get<SwingBotDashboard>(API_ENDPOINTS.tradingBots.dashboard(id)); }
+  getTradingBotLogs(id: string, count = 100): Observable<BotLog[]> { return this.http.get<BotLog[]>(API_ENDPOINTS.tradingBots.logs(id), { params: { count } }); }
+  tradingBotLogStreamUrl(id: string): string { return API_ENDPOINTS.tradingBots.logsStream(id); }
+  evaluateTradingBot(id: string): Observable<BotEvaluationResponse> { return this.http.post<BotEvaluationResponse>(API_ENDPOINTS.tradingBots.evaluate(id), {}); }
   startTradingBot(id: string): Observable<TradingBot> { return this.http.post<TradingBot>(API_ENDPOINTS.tradingBots.start(id), {}); }
+  pauseTradingBot(id: string): Observable<TradingBot> { return this.http.post<TradingBot>(API_ENDPOINTS.tradingBots.pause(id), {}); }
   stopTradingBot(id: string): Observable<TradingBot> { return this.http.post<TradingBot>(API_ENDPOINTS.tradingBots.stop(id), {}); }
 }

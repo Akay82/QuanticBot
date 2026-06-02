@@ -41,10 +41,20 @@ export class PaperTradingComponent {
   protected requestedPrice: number | null = null;
 
   protected readonly selectedAccount = computed(() => this.accounts().find((account) => account.id === this.accountId) ?? null);
+  protected readonly selectedInstrument = computed(() => this.instruments().find((instrument) => instrument.id === this.instrumentId) ?? null);
   protected readonly pendingOrders = computed(() => this.orders().filter((order) => order.status === 'PENDING'));
   protected readonly realizedPnl = computed(() => this.trades().reduce((sum, trade) => sum + (trade.profitLoss ?? 0), 0));
   protected readonly openPositions = computed(() => this.positions().filter((position) => position.quantity > 0));
   protected readonly unrealizedPnl = computed(() => this.openPositions().reduce((sum, position) => sum + this.positionPnl(position), 0));
+  protected readonly pipSize = computed(() => this.selectedInstrument()?.symbol.includes('JPY') ? 0.01 : 0.0001);
+  protected readonly pipValue = computed(() => this.quantity * this.pipSize());
+  protected readonly lotEquivalent = computed(() => this.quantity / 100000);
+  protected readonly referencePrice = computed(() =>
+    this.requestedPrice && this.requestedPrice > 0
+      ? this.requestedPrice
+      : this.marketCharts().find((chart) => chart.instrumentId === this.instrumentId)?.candles.at(-1)?.close ?? null
+  );
+  protected readonly estimatedNotional = computed(() => (this.referencePrice() ?? 0) * this.quantity);
 
   constructor() {
     this.loadInitialData();
@@ -86,6 +96,10 @@ export class PaperTradingComponent {
 
   protected cancel(order: Order): void {
     this.runAction(this.api.cancelOrder(order.id), `Order #${order.id} cancelled.`);
+  }
+
+  protected setQuantity(units: number): void {
+    this.quantity = units;
   }
 
   protected closePosition(position: Position): void {
@@ -176,6 +190,7 @@ export class PaperTradingComponent {
         this.positions.set(positions.items);
         this.trades.set(trades.items);
         this.marketCharts.set(charts);
+        if (!charts.some((chart) => chart.instrumentId === this.instrumentId)) this.instrumentId = charts[0]?.instrumentId ?? this.instrumentId;
         for (const order of orders.items) {
           if (order.requestedPrice) this.executionPrices[order.id] ??= order.requestedPrice;
         }
